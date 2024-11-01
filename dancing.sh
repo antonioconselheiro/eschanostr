@@ -2,7 +2,7 @@
 
 clear
 
-# Animation frames
+# frames
 frame1="
     N     
    /|\\     
@@ -38,7 +38,7 @@ position() {
   printf "\033[%d;%dH" $1 $2
 }
 
-# Clear the previous frame
+# clear previous frame
 clear_frame() {
     position $1 $2
     echo -e "        "
@@ -54,7 +54,7 @@ clear_frame() {
     echo -e "        "
 }
 
-# Main animation loop
+# main animation loop
 row=10
 col=20
 

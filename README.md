@@ -4,7 +4,7 @@
 > written, which no man knoweth saving he that receiveth it."
 > Apocalypse 2:17
 
-# Eschalostr
+# Neschalostr
 
 Convert electricity into read friendly nostr npub.
 
@@ -12,15 +12,15 @@ Convert electricity into read friendly nostr npub.
 
 **Basic run:**
 
-`eschalostr --nregex "lojinha" --npassword "jesuslindo"`
+`neschalostr --nregex "lojinha" --npassword "jesuslindo"`
 
 or
 
-`eschalostr -r "lojinha" -p "jesuslindo"`
+`neschalostr -r "lojinha" -p "jesuslindo"`
 
 **Complex regexes:**
 
-`eschalostr --nregex "l[o0]j[i1]nh?[a4]" --npassword "jesusteama"`
+`neschalostr --nregex "l[o0]j[i1]nh?[a4]" --npassword "jesusteama"`
 
 You will search the names in a brute force algorithm, so if you fill the regex with all your read-friendly npub expectations so you can do it only once.
 
