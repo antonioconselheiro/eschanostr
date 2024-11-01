@@ -8,6 +8,18 @@
 
 Convert electricity into read friendly nostr npub.
 
+## How it works?
+
+<pre>
+Basically this N guy dances
+until find a nsec
+that derivate into a npub
+that matches with your nregex
+then print a ncryptsec
+that you can open using you npassword
+nnnnnnNnnnnnnnnNnnnnnnostr
+</pre>
+
 ![Animated GIF of Dr Neo Cortex from Crash Bandicoot series dancing russian dance kazotsky](./dr-neo-cortex-kazotsky.gif)
 
 ## Release
