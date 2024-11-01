@@ -1,0 +1,23 @@
+{
+  "name": "Eschalotstr Dev",
+  "dockerComposeFile": ["docker-compose.yml"],
+  "service": "eschalotstr-dev",
+  "workspaceFolder": "/eschalotstr",
+  "postCreateCommand": "./auth.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "BarbossHack.crates-io",
+        "hdevalke.rust-test-lens",
+        "juggernautjp.less-toml",
+        "eamodio.gitlens",
+        "NathanInbar.vs-ghoul",
+        "ms-azuretools.vscode-docker",
+        "manishsencha.readme-preview",
+        "esbenp.prettier-vscode",
+        "black-bee-code.black-bee",
+        "rust-lang.rust-analyzer"
+      ]
+    }
+  }
+}
