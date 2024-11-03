@@ -3,7 +3,7 @@
   "dockerComposeFile": ["docker-compose.yml"],
   "service": "meschalotstr-dev",
   "workspaceFolder": "/meschalotstr",
-  "postCreateCommand": "./auth.sh",
+  "postCreateCommand": "./.devcontainer/auth.sh",
   "customizations": {
     "vscode": {
       "extensions": [
