@@ -18,7 +18,7 @@ use std::io::{stdout, Write};
 use ctrlc;
 
 #[derive(Parser)]
-#[clap(name = "eschanostr", version = "1.0", about = "convert electricity into read friendly nostr npub")]
+#[clap(name = "eschanostr", version = "1.0.1", about = "convert electricity into read friendly nostr npub")]
 struct Cli {
 
   #[arg(short = 'r', long, help = "mandatory regular expression with the desired pattern in your npub")]
@@ -122,7 +122,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
   let npassword = args.npassword.unwrap_or("".to_string());
   let ndancing = args.ndancing.unwrap_or(true);
 
-  let full_regex_pattern = format!(r"^npub1({})", args.nregex);
+  //  set offset
   let spacing;
   if ndancing {
     spacing = "\r             ";
@@ -130,8 +130,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     spacing = "";
   }
 
-  println!("{}:: STARTING", spacing);
+  //  validate and build regex
+  let nregex = args.nregex.clone();
+  let is_alpha_numerical = Regex::new("^[a-zA-Z\\d]+$")?;
+  let is_bench32_compatible = Regex::new("^[023456789acdefghjklmnpqrstuvwxyz]+$")?;
 
+  if is_alpha_numerical.is_match(&nregex) && !is_bench32_compatible.is_match(&nregex) {
+    println!("{}:: Chars that occurs in npub1: 023456789acdefghjklmnpqrstuvwxyz", spacing);
+    panic!("{}:: Error: some characteres in \"{}\" will never occur in npub1 string", spacing, nregex);
+  }
+  let full_regex_pattern = format!(r"^npub1({})", nregex);
+
+  //  subscribe ctrlc listener
   let mut ctrlc_calls = 0;
   let ctrlc_can_be_not_instantly = [
     "user triggered close command",
@@ -159,7 +169,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     "yeah I known",
   ];
 
-  //  listen user close command
   let running: Arc<AtomicBool> = Arc::new(AtomicBool::new(true));
   let running_clone = running.clone();
   ctrlc::set_handler(move || {
@@ -176,6 +185,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     running_clone.store(false, Ordering::SeqCst);
   })?;
 
+  println!("{}:: STARTING", spacing);
   if ndancing {
     println!("");
     println!("{}▓█████   ██████  ▄████▄   ██░ ██  ▄▄▄          ███▄    █  ▒█████    ██████ ▄▄▄█████▓ ██▀███  ", spacing);

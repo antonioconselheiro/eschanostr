@@ -12,7 +12,7 @@ Convert electricity into read friendly nostr npub.
 ## Install
 
 ```sh
-sudo wget -O /usr/bin/eschanostr https://github.com/antonioconselheiro/eschanostr/releases/download/1.0.0/eschanostr;
+sudo wget -O /usr/bin/eschanostr https://github.com/antonioconselheiro/eschanostr/releases/download/1.0.1/eschanostr;
 sudo chmod +x /usr/bin/eschanostr
 ```
 
@@ -22,15 +22,15 @@ Or just download the last version in releases page.
 
 **Basic run:**
 
-`eschanostr --nregex "horses" --npassword "jesusteama"`
+`eschanostr --nregex "deep" --npassword "jesusteama"`
 
 or
 
-`eschanostr -r "libs" -p "reijesus"`
+`eschanostr -r "h0ney" -p "reijesus"`
 
 **Complex regexes:**
 
-`eschanostr --nregex ".*h[o0]rs[e3]s?" --npassword "jesusteama"`
+`eschanostr --nregex ".*pl[a4]c[e3]" --npassword "jesusteama"`
 
 You can compose your regex using [this tool](https://jex.im/regulex/#!flags=&re=.*h%5Bo0%5Drs%5Be3%5Ds%3F).
 
@@ -38,7 +38,7 @@ The algorithm use brute-force search, so if you should fill the regex with all y
 
 **Dev run**
 
-`cargo run -- --nregex "shop" --npassword "jesuslindo"`
+`cargo run -- --nregex "sh0p" --npassword "jesuslindo"`
 
 See more in [CONTRIBUTE.md](./CONTRIBUTE.md).
 
