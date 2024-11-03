@@ -12,7 +12,8 @@ Convert electricity into read friendly nostr npub.
 ## Install
 
 ```sh
-curl -o- https://raw.githubusercontent.com/antonioconselheiro/eschanostr/refs/heads/master/download-install.sh | bash
+sudo wget -O /usr/bin/eschanostr https://github.com/antonioconselheiro/eschanostr/releases/download/1.0.0/eschanostr;
+sudo chmod +x /usr/bin/eschanostr
 ```
 
 Or just download the last version in releases page.
