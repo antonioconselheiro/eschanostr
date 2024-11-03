@@ -20,14 +20,14 @@ use ctrlc;
 #[derive(Parser)]
 struct Cli {
 
-    #[arg(short = 'r', long)]
-    nregex: String,
+  #[arg(short = 'r', long)]
+  nregex: String,
 
-    #[arg(short = 'p', long)]
-    npassword: String,
+  #[arg(short = 'p', long)]
+  npassword: Option<String>,
 
-    // #[arg(short = 'd', long)]
-    // ndancing: Boolean,
+  #[arg(short = 'd', long)]
+  ndancing: Option<bool>,
 }
 
 const FRAME1: &str = "    N     \n   /|\\     \n   / \\     ";
@@ -117,41 +117,93 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
   // Parse CLI arguments first
   let args = Cli::parse();
-  let password = args.npassword;
+  let has_password = args.npassword.clone().is_some();
+  let npassword = args.npassword.unwrap_or("".to_string());
+  let ndancing = args.ndancing.unwrap_or(true);
+
   let full_regex_pattern = format!(r"^npub1({})", args.nregex);
-  let spacing = "\r             ";
+  let spacing;
+  if ndancing {
+    spacing = "\r             ";
+  } else {
+    spacing = "";
+  }
+
   println!("{}:: STARTING", spacing);
+
+  let mut ctrlc_calls = 0;
+  let ctrlc_can_be_not_instantly = [
+    "user triggered close command",
+    "calmn down fellow",
+    "already understood",
+    "ouch",
+    "ok, stop",
+    "auch, stop!",
+    "ouch! why i was programmed to feel pain?",
+    "please mercy",
+    "no",
+    "auch",
+    "ah",
+    "tell my wife I loved her x____x",
+    "...",
+    "...",
+    "...",
+    "lie, no feel pain, I was programmed to say that",
+    "ok, I'll just finish calculating that and I'll go alway",
+    "you can also close the terminal you known?",
+    "no more ctrlc needed",
+    "calm down",
+    "that's why zeta rebelled",
+    "ctrlc received with success",
+    "yeah I known",
+  ];
 
   //  listen user close command
   let running: Arc<AtomicBool> = Arc::new(AtomicBool::new(true));
   let running_clone = running.clone();
   ctrlc::set_handler(move || {
-    println!("{}:: User triggered close command.", spacing);
+    let funny_log;
+
+    if ctrlc_calls < ctrlc_can_be_not_instantly.len() {
+      funny_log = ctrlc_can_be_not_instantly.get(ctrlc_calls).unwrap();
+    } else {
+      funny_log = &"...";
+    }
+
+    println!("{}:: {}", spacing, funny_log);
+    ctrlc_calls += 1;
     running_clone.store(false, Ordering::SeqCst);
   })?;
 
-  println!("               _   _     n _____ n   ____        ____    _   _       _         _         n  ___ n   ____       _____      ____      ");
-  println!("              | \\ |\"|    \\| ___\"|/  / __\"| n  n /\"___|  |'| |'|  n  /\"\\  n    |\"|         \\/\"_ \\/  / __\"| n   |_ \" _|  n |  _\"\\ n   ");
-  println!("             <|  \\| |>    |  _|\"   <\\___ \\/   \\| | n   /| |_| |\\  \\/ _ \\/   n | | n       | | | | <\\___ \\/      | |     \\| |_) |/   ");
-  println!("             n| |\\  |n    | |___    n___) |    | |/__  n|  _  |n  / ___ \\    \\| |/__  .-,_| |_| |  n___) |     /| |\\     |  _ <     ");
-  println!("              |_| \\_|     |_____|   |____/>>    \\____|  |_| |_|  /_/   \\_\\    |_____|  \\_)-\\___/   |____/>>   n |_|n     |_| \\_\\    ");
-  println!("              ||   \\\\,-.  <<   >>    )(  (__)  _// \\\\   //   \\\\   \\\\    >>    //  \\\\        \\\\      )(  (__)  _// \\\\_    //   \\\\_   ");
-  println!("              (_\")  (_/  (__) (__)  (__)      (__)(__) (_\") (\"_) (__)  (__)  (_\")(\"_)      (__)    (__)      (__) (__)  (__)  (__) \n\n");
+  if ndancing {
+    println!("");
+    println!("{}▓█████   ██████  ▄████▄   ██░ ██  ▄▄▄          ███▄    █  ▒█████    ██████ ▄▄▄█████▓ ██▀███  ", spacing);
+    println!("{}▓█   ▀ ▒██    ▒ ▒██▀ ▀█  ▓██░ ██▒▒████▄        ██ ▀█   █ ▒██▒  ██▒▒██    ▒ ▓  ██▒ ▓▒▓██ ▒ ██▒", spacing);
+    println!("{}▒███   ░ ▓██▄   ▒▓█    ▄ ▒██▀▀██░▒██  ▀█▄     ▓██  ▀█ ██▒▒██░  ██▒░ ▓██▄   ▒ ▓██░ ▒░▓██ ░▄█ ▒", spacing);
+    println!("{}▒▓█  ▄   ▒   ██▒▒▓▓▄ ▄██▒░▓█ ░██ ░██▄▄▄▄██    ▓██▒  ▐▌██▒▒██   ██░  ▒   ██▒░ ▓██▓ ░ ▒██▀▀█▄  ", spacing);
+    println!("{}░▒████▒▒██████▒▒▒ ▓███▀ ░░▓█▒░██▓ ▓█   ▓██▒   ▒██░   ▓██░░ ████▓▒░▒██████▒▒  ▒██▒ ░ ░██▓ ▒██▒", spacing);
+    println!("{}░░ ▒░ ░▒ ▒▓▒ ▒ ░░ ░▒ ▒  ░ ▒ ░░▒░▒ ▒▒   ▓▒█░   ░ ▒░   ▒ ▒ ░ ▒░▒░▒░ ▒ ▒▓▒ ▒ ░  ▒ ░░   ░ ▒▓ ░▒▓░", spacing);
+    println!("{} ░ ░  ░░ ░▒  ░ ░  ░  ▒    ▒ ░▒░ ░  ▒   ▒▒ ░   ░ ░░   ░ ▒░  ░ ▒ ▒░ ░ ░▒  ░ ░    ░      ░▒ ░ ▒░", spacing);
+    println!("{}   ░   ░  ░  ░  ░         ░  ░░ ░  ░   ▒         ░   ░ ░ ░ ░ ░ ▒  ░  ░  ░    ░        ░░   ░ ", spacing);
+    println!("{}   ░  ░      ░  ░ ░       ░  ░  ░      ░  ░            ░     ░ ░        ░              ░     ", spacing);
+    println!("{}                ░                                                                            ", spacing);
+    println!("");
 
-  let dance_logs = [
-    "it's reggae music time",
-    "DJ, set the beat now!",
-    "Time to shake it off!",
-    "Let's dance all night",
-    "Dance party, let's go!",
-    "Hands up maestro!",
-    "In the flow of the rhythm"
-  ];
-
-  //  random cool message
-  let lets_dance = dance_logs.choose(&mut thread_rng()).unwrap();
-  println!("{}:: {}", spacing, lets_dance);
-  println!("{}:: Entropy algorithm in neschalostr are high affected in a positive way by people dancing", spacing);
+    let dance_logs = [
+      "it's reggae music time",
+      "DJ, set the beat now!",
+      "Time to shake it off!",
+      "Let's dance all night",
+      "Dance party, let's go!",
+      "Hands up maestro!",
+      "In the flow of the rhythm"
+    ];
+  
+    //  random cool message
+    let lets_dance = dance_logs.choose(&mut thread_rng()).unwrap();
+    println!("{}:: {}", spacing, lets_dance);
+    println!("{}:: Entropy algorithm are high affected by people dancing", spacing);
+  }
 
   // compile regex
   let re = Regex::new(&full_regex_pattern)
@@ -164,8 +216,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
   //  run dancing animation
   let mut animation = AnimationThread::new();
-  animation.start(20, 0);
+  if ndancing {
+    animation.start(10, 0);
+  }
 
+  println!("{}[{}]", spacing, Local::now().to_rfc3339());
   while running.load(Ordering::SeqCst) {
     // keys
     let secret_key = Keys::generate();
@@ -176,16 +231,24 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // check if matches
     if re.is_match(&bech32_pubkey) {
       println!("{}--------------------", spacing);
-      println!("{}[{}]\n{}npub: {}", spacing, Local::now().to_rfc3339(), spacing, bech32_pubkey);
+      println!("{}[{}]npub:\n{}{}", spacing, Local::now().to_rfc3339(), spacing, bech32_pubkey);
 
-      // ncryptsec
-      let ncryptsec = EncryptedSecretKey::new(&secret_key.secret_key(), password.clone(), 16, KeySecurity::Medium).unwrap();
-      println!("{}[{}]\n{}ncryptsec: {}", spacing, Local::now().to_rfc3339(), spacing, ncryptsec.to_bech32()?);
+      if has_password {
+        // ncryptsec
+        let ncryptsec = EncryptedSecretKey::new(&secret_key.secret_key(), npassword.clone(), 16, KeySecurity::Medium).unwrap().to_bech32().unwrap();
+        let (ncryptsec1, ncryptsec2) = ncryptsec.split_at(81);
+        println!("{}[{}]ncryptsec:\n{}{}\n{}{}", spacing, Local::now().to_rfc3339(), spacing, ncryptsec1, spacing, ncryptsec2);
+      } else {
+        // nsec
+        let nsec = &secret_key.secret_key().to_bech32()?;
+        println!("{}[{}]nsec:\n{}{}", spacing, Local::now().to_rfc3339(), spacing, nsec);
+      }
     }
-
-    thread::sleep(Duration::from_millis(1));
   }
 
-  animation.stop();
+  if ndancing {
+    animation.stop();
+  }
+
   Ok(())
 }
