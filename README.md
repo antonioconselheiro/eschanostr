@@ -10,6 +10,9 @@ Convert electricity into read friendly nostr npub.
 
 ## Running
 
+**dev run**
+`cargo run -- --nregex "lojinha" --npassword "jesuslindo"`
+
 **Basic run:**
 
 `neschalostr --nregex "lojinha" --npassword "jesuslindo"`
