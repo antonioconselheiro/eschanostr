@@ -1,6 +1,5 @@
 use crossterm::cursor::{RestorePosition, SavePosition};
 use crossterm::queue;
-use crossterm::terminal::{disable_raw_mode, enable_raw_mode};
 use nostr::prelude::*;
 use clap::Parser;
 use regex::Regex;
@@ -16,6 +15,7 @@ use crossterm::{
   style::Print,
 };
 use std::io::{stdout, Write};
+use ctrlc;
 
 #[derive(Parser)]
 struct Cli {
@@ -60,18 +60,18 @@ struct AnimationThread {
 impl AnimationThread {
   fn new() -> Self {
     AnimationThread {
-          running: Arc::new(AtomicBool::new(false)),
-          handle: None,
-      }
+      running: Arc::new(AtomicBool::new(false)),
+      handle: None,
+    }
   }
 
   fn start(&mut self, row: u16, col: u16) {
+
     self.running.store(true, Ordering::Relaxed);
     let running = self.running.clone();
     
     self.handle = Some(thread::spawn(move || {
       let mut stdout = stdout();
-      enable_raw_mode().unwrap();
 
       while running.load(Ordering::Relaxed) {
         for frame in &FRAMES {
@@ -90,15 +90,12 @@ impl AnimationThread {
             ).unwrap();
           }
 
-          // Restore cursor position and flush
           queue!(stdout, RestorePosition).unwrap();
           stdout.flush().unwrap();
-
           thread::sleep(Duration::from_millis(200));
         }
       }
 
-      disable_raw_mode().unwrap();
     }));
   }
 
@@ -118,20 +115,29 @@ impl Drop for AnimationThread {
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
 
-    println!("               _   _     n _____ n   ____        ____    _   _       _         _         n  ___ n   ____       _____      ____      ");
-    println!("              | \\ |\"|    \\| ___\"|/  / __\"| n  n /\"___|  |'| |'|  n  /\"\\  n    |\"|         \\/\"_ \\/  / __\"| n   |_ \" _|  n |  _\"\\ n   ");
-    println!("             <|  \\| |>    |  _|\"   <\\___ \\/   \\| | n   /| |_| |\\  \\/ _ \\/   n | | n       | | | | <\\___ \\/      | |     \\| |_) |/   ");
-    println!("             n| |\\  |n    | |___    n___) |    | |/__  n|  _  |n  / ___ \\    \\| |/__  .-,_| |_| |  n___) |     /| |\\     |  _ <     ");
-    println!("              |_| \\_|     |_____|   |____/>>    \\____|  |_| |_|  /_/   \\_\\    |_____|  \\_)-\\___/   |____/>>   n |_|n     |_| \\_\\    ");
-    println!("              ||   \\\\,-.  <<   >>    )(  (__)  _// \\\\   //   \\\\   \\\\    >>    //  \\\\        \\\\      )(  (__)  _// \\\\_    //   \\\\_   ");
-    println!("              (_\")  (_/  (__) (__)  (__)      (__)(__) (_\") (\"_) (__)  (__)  (_\")(\"_)      (__)    (__)      (__) (__)  (__)  (__) \n\n");
-
   // Parse CLI arguments first
   let args = Cli::parse();
   let password = args.npassword;
   let full_regex_pattern = format!(r"^npub1({})", args.nregex);
-  
-  println!("             :: STARTING\r");
+  let spacing = "\r             ";
+  println!("{}:: STARTING", spacing);
+
+  //  listen user close command
+  let running: Arc<AtomicBool> = Arc::new(AtomicBool::new(true));
+  let running_clone = running.clone();
+  ctrlc::set_handler(move || {
+    println!("{}:: User triggered close command.", spacing);
+    running_clone.store(false, Ordering::SeqCst);
+  })?;
+
+  println!("               _   _     n _____ n   ____        ____    _   _       _         _         n  ___ n   ____       _____      ____      ");
+  println!("              | \\ |\"|    \\| ___\"|/  / __\"| n  n /\"___|  |'| |'|  n  /\"\\  n    |\"|         \\/\"_ \\/  / __\"| n   |_ \" _|  n |  _\"\\ n   ");
+  println!("             <|  \\| |>    |  _|\"   <\\___ \\/   \\| | n   /| |_| |\\  \\/ _ \\/   n | | n       | | | | <\\___ \\/      | |     \\| |_) |/   ");
+  println!("             n| |\\  |n    | |___    n___) |    | |/__  n|  _  |n  / ___ \\    \\| |/__  .-,_| |_| |  n___) |     /| |\\     |  _ <     ");
+  println!("              |_| \\_|     |_____|   |____/>>    \\____|  |_| |_|  /_/   \\_\\    |_____|  \\_)-\\___/   |____/>>   n |_|n     |_| \\_\\    ");
+  println!("              ||   \\\\,-.  <<   >>    )(  (__)  _// \\\\   //   \\\\   \\\\    >>    //  \\\\        \\\\      )(  (__)  _// \\\\_    //   \\\\_   ");
+  println!("              (_\")  (_/  (__) (__)  (__)      (__)(__) (_\") (\"_) (__)  (__)  (_\")(\"_)      (__)    (__)      (__) (__)  (__)  (__) \n\n");
+
   let dance_logs = [
     "it's reggae music time",
     "DJ, set the beat now!",
@@ -142,25 +148,25 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     "In the flow of the rhythm"
   ];
 
+  //  random cool message
   let lets_dance = dance_logs.choose(&mut thread_rng()).unwrap();
-  println!("             :: {}\r", lets_dance);
-  println!("             :: Entropy algorithm in neschalostr are high affected in a positive way by people dancing\r");
+  println!("{}:: {}", spacing, lets_dance);
+  println!("{}:: Entropy algorithm in neschalostr are high affected in a positive way by people dancing", spacing);
 
-  // Compile regex
+  // compile regex
   let re = Regex::new(&full_regex_pattern)
     .map_err(|e| {
-        eprintln!("             :: Error compiling regex: {}\r", e);
-        e
+      eprintln!("{}:: Error compiling regex: {}", spacing, e);
+      e
     })?;
 
-  println!("             :: REGEX /{}/\r", re.to_string());
+  println!("{}:: REGEX /{}/", spacing, re.to_string());
 
+  //  run dancing animation
   let mut animation = AnimationThread::new();
-  animation.start(16, 0);
-  thread::sleep(Duration::from_millis(500));
+  animation.start(20, 0);
 
-  // really start here
-  loop {
+  while running.load(Ordering::SeqCst) {
     // keys
     let secret_key = Keys::generate();
     
@@ -169,12 +175,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // check if matches
     if re.is_match(&bech32_pubkey) {
-      println!("            --------------------");
-      println!("            [{}] npub: {}\r", Local::now().to_rfc3339(), bech32_pubkey);
+      println!("{}--------------------", spacing);
+      println!("{}[{}]\n{}npub: {}", spacing, Local::now().to_rfc3339(), spacing, bech32_pubkey);
 
       // ncryptsec
       let ncryptsec = EncryptedSecretKey::new(&secret_key.secret_key(), password.clone(), 16, KeySecurity::Medium).unwrap();
-      println!("            [{}] ncryptsec: {}\r", Local::now().to_rfc3339(), ncryptsec.to_bech32()?);
+      println!("{}[{}]\n{}ncryptsec: {}", spacing, Local::now().to_rfc3339(), spacing, ncryptsec.to_bech32()?);
     }
+
+    thread::sleep(Duration::from_millis(1));
   }
+
+  animation.stop();
+  Ok(())
 }

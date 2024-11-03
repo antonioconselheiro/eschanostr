@@ -1,8 +1,8 @@
 {
   "name": "Neschalotstr Dev",
   "dockerComposeFile": ["docker-compose.yml"],
-  "service": "meschalotstr-dev",
-  "workspaceFolder": "/meschalotstr",
+  "service": "neschalotstr-dev",
+  "workspaceFolder": "/neschalotstr",
   "postCreateCommand": "./.devcontainer/auth.sh",
   "customizations": {
     "vscode": {
