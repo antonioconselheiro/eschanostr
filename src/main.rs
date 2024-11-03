@@ -18,15 +18,16 @@ use std::io::{stdout, Write};
 use ctrlc;
 
 #[derive(Parser)]
+#[clap(name = "eschanostr", version = "1.0", about = "convert electricity into read friendly nostr npub")]
 struct Cli {
 
-  #[arg(short = 'r', long)]
+  #[arg(short = 'r', long, help = "mandatory regular expression with the desired pattern in your npub")]
   nregex: String,
 
-  #[arg(short = 'p', long)]
+  #[arg(short = 'p', long, help = "recommended, by including the password the ncryptsec will be logged instead of the nsec")]
   npassword: Option<String>,
 
-  #[arg(short = 'd', long)]
+  #[arg(short = 'd', long, help = "set to false to show only necessary logs")]
   ndancing: Option<bool>,
 }
 

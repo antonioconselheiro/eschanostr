@@ -2,17 +2,22 @@
 > churches; To him that overcometh will I give to eat of the hidden
 > manna, and will give him a white stone, and in the stone a new name
 > written, which no man knoweth saving he that receiveth it."
+>
 > Apocalypse 2:17
 
 # Eschanostr
 
 Convert electricity into read friendly nostr npub.
 
+## Install
+
+```sh
+curl -o- https://raw.githubusercontent.com/antonioconselheiro/eschanostr/refs/heads/master/download-install.sh | bash
+```
+
+Or just download the last version in releases page.
+
 ## Running
-
-**dev run**
-
-`cargo run -- --nregex "shop" --npassword "jesuslindo"`
 
 **Basic run:**
 
@@ -30,16 +35,21 @@ You can compose your regex using [this tool](https://jex.im/regulex/#!flags=&re=
 
 The algorithm use brute-force search, so if you should fill the regex with all your read-friendly npub expectations, this way you can do it only one time.
 
+**Dev run**
+
+`cargo run -- --nregex "shop" --npassword "jesuslindo"`
+
+See more in [CONTRIBUTE.md](./CONTRIBUTE.md).
+
 ## Approximate time
 
 The lower the requirement, the faster the npub friendly readable will be found, the higher the requirement, the slower it will be found (except if you dance).
 
 - One or two letter - less than one second (20ms faster if you dance)
-- Three letter - less than ten seconds
-- Four letter - around one minute
-- Five letters -
-- Six letters -
-- Seven letters - around a day (20ms faster if you known what)
+- Three or four letter - less than ten seconds
+- Five letters - less than five minutes
+- Six letters - can make some in a hour
+- Seven letters - some time, I never tested this or more
 
 You can find it faster if you search for a pattern inside the npub instead of in the begining (by starting your regex with .\*) and dance on run.
 
@@ -55,10 +65,6 @@ that you can open using you npassword
 </pre>
 
 ![Animated GIF of Dr Neo Cortex from Crash Bandicoot series dancing russian dance kazotsky](./dr-neo-cortex-kazotsky.gif)
-
-## Release
-
-Not released yet
 
 ## Donate
 
