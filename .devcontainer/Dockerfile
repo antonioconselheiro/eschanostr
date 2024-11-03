@@ -1,6 +1,6 @@
 FROM rust
 
-WORKDIR /eschalotstr
+WORKDIR /neschalotstr
 
 RUN cargo install cargo-edit
 

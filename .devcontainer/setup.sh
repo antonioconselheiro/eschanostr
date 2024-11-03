@@ -23,6 +23,6 @@ echo "[user]
     editor = code --wait
 
 [safe]
-    directory = /eschalotstr" > .gitconfig
+    directory = /neschalotstr" > .gitconfig
 
 echo "now paste the content of .ssh/id_ed25519.pub into https://github.com/settings/ssh/new"

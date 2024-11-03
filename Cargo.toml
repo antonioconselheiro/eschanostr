@@ -1,10 +1,11 @@
 [package]
-name = "eschalostr"
+name = "neschalostr"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 chrono = "0.4.38"
 clap = { version = "4.5.20", features = ["derive"] }
+crossterm = "0.28.1"
 nostr = "0.35.0"
 regex = "1.11.1"

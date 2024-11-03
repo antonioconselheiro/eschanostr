@@ -1,11 +1,11 @@
 services:
-  eschalotstr-dev:
-    image: eschalotstr-dev
-    container_name: eschalotstr-dev
+  neschalotstr-dev:
+    image: neschalotstr-dev
+    container_name: neschalotstr-dev
     build:
       context: ../.
       dockerfile: ./.devcontainer/Dockerfile
-    working_dir: /eschalotstr
+    working_dir: /neschalotstr
     volumes:
-      - ..:/eschalotstr:cached
+      - ..:/neschalotstr:cached
     tty: true
