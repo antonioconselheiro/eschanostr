@@ -62,7 +62,7 @@ until find a nsec
 that derivate into a npub
 that matches with your nregex
 then print a ncryptsec
-that you can open using you npassword
+that you can open using your npassword
 </pre>
 
 ![Animated GIF of Dr Neo Cortex from Crash Bandicoot series dancing russian dance kazotsky](./dr-neo-cortex-kazotsky.gif)
