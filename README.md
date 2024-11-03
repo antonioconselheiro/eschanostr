@@ -52,7 +52,7 @@ The lower the requirement, the faster the npub friendly readable will be found, 
 - Six letters - can make some in a hour
 - Seven letters - some time, I never tested this or more
 
-You can find it faster if you search for a pattern inside the npub instead of in the begining (by starting your regex with .\*) and dance on run.
+You can find it faster if you search for a pattern inside the npub instead of in the begining (by starting your regex with `.\*`) and dance on run.
 
 ## How it works?
 
